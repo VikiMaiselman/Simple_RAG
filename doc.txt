@@ -1,0 +1,998 @@
+It’s Python, man
+
+Deep Python Course {part 1}
+
+How args are assigned to function params?
+Positional args — via the order in which the args are passed
+
+Keyword args — via the name of the parameter (=you specify the name of the parameter when you pass the argument on function call)
+
+def my_func(a, b, c): 
+	pass
+
+my_func(a=1, b=2, c=3)
+my_func(1, 2, c=3)
+
+— kw-args should always be the last!
+
+
+Default values
+— are specified on the params
+— only on the last param(s), you can’t specify them on params in the middle
+
+my_func(a, b=5, c=10):
+	pass
+
+my_func(1, c=2)
+
+
+Mandatory keyword args
+def func(a, b, *args, d)
+— *args exhausts all the positional args
+— d makes user pass the d-param as a kw-arg only (user must pass it as kw-arg)
+
+def func(*, d)
+— this func says it won’t receive positional args at all 
+— it makes user pass only kw-args
+
+
+Unpacking
+— tuples are defined by a comma, not by ( )
+— packed values: tuples, lists, strings, dicts, sets, other iterables
+
+— unpacking = splitting the values contained in a packed ds (based on their relative positions) 
+
+— examples
+a, b, c = 10, 20, “hello”
+a, b, c = “VIK”
+a, b = 10, 20
+
+— during the unpacking 1st the RHS is evaluated completely as a tuple with references to all its packed values
+
+— swapping
+a, b = b, a
+
+RHS evaluated as a tuple (± new_tuple = (id(b), id(a)))
+a references id(b)
+b references id(a)
+
+— examples
+a, b, c = 10, {1, 2}, [1, 2, 3]
+a = 10
+b = {1, 2}
+c = [1, 2, 3]
+
+d = {‘a’:1, ‘b’:2, ‘c’:3, ‘d’:4}
+a, b, c, d = d
+a = ‘a’
+b = ‘b’
+c = ‘c’
+d = ‘d’
+
+a, b, c, d = d.values()
+a = 1
+b = 2
+c = 3
+d = 4
+
+— slicing (compared to unpacking) works only on sequence types
+a, b = my_list[0], my_list[1:]
+— unpacking works on any iterable
+
+Analog of REST (…) operator in JS:
+a, *b = my_list 
+
+a, *b = (-10, 5, 2, 100)
+a = -10
+b = [5, 2, 100]
+— unpacking to * on the LHS always is to a LIST except for *args in function (there — to a tuple)
+
+Analog of SPREAD (…) operator in JS:
+li_1 = [1, 2, 3]
+li_2 = [4, 5, 6]
+l = [*li_1, *li_2] => [1, 2, 3, 4, 5, 6]
+
+d1 = {‘p’: 1, ‘y’: 2}
+d2 = {‘y’: 3, ’t’: 4}
+d = [*d1, *d2] => [‘p’, ‘y’, ‘y’, ’t’]
+d = [**d1, **d2] => [‘p’: 1, ‘y’: 3, ’t’: 4] // the last occurrence 
+
+Complex & nested:
+a, *b, (c, d, e) = [1, 2, 3, ‘xyz’]
+a = 1
+b = [2, 3]
+c = ‘x’	d = ‘y’	e = ‘z’
+
+a, *b, (c, *d) = [1, 2, 3, ‘Python’]
+a = 1
+b = [2, 3]
+c = ‘P’
+d = [‘y’, ’t’, ‘h’, ‘o’, ’n’]
+
+
+def avg(*args):
+	count = len(args)
+	total = sum(args)
+	return count and total / count
+// if count == 0 than it’s falsy, 0 will be returned, the statement after ‘and’ won’t be evaluated (we won’t /0)
+// else total / count value will be returned 
+
+
+Numbers in Python
+— integral (int, bool)
+— non-integral:
+	floats (C doubles)
+	complex
+	decimals (different precision implementation compared to ‘floats’)
+	fractions (1/3 — can’t be precisely represented by any programming language, as no language & no computer have infinite memory, but #s after the decimal point are really infinite if you try to represent it in binary)
+
+
+Singletons in Python
+— None
+— NotImplemented
+— (…) - elipsis operator
+
+
+Callables in Python
+— generators
+— user-defined functions & instance methods (of a class)
+— built-in funcs len(), open() & methods .append(x)
+— classes
+— class instances that implement __call__()
+
+
+Collections in Python
+— Sequences
+	mutable (list)
+	immutable (tuple, string)
+— Sets
+	mutable (set)
+	immutable (frozen set)
+— Maps 
+	dictionaries
+
+
+Multiline statements
+— expressions have IMPLICIT physical => logical newline conversion
+(list, sets, tuples, dictionaries, func args/params)
+— they also allow comments
+— in the end, everything will be removed to produce a single line
+
+a = [1, # comment1
+     2, # some other comment
+    ]
+
+— statements must have explicit indication that multiple physical lines should be treated as a single logical line
+if a \
+	and b \
+		and c:
+	pass
+
+— all unnecessary characters (\n , spaces) will be removed automatically
+— here comments can NOT be used
+
+— strings can be multiline if indicated with ‘’’string’’’ (or “””string”””)
+— however all characters such as \n, tabs, spaces will be included into the string
+
+“””this is
+	a multiline string”
+— will include space, \n, so it might not be printed in the console | to the user as you see it here (beware of that, if you use multiline string for these purposes)
+
+
+Naming conventions 🥰
+MUSTs:
+— var names should start with _ VS a letter
+— and be followed by _, letters or numbers
+— Python reserved words can’t be used
+
+SHOULDs:
+— vars that start with _ are usually vars marked for internal use (so called “private”)
+— __vars are used in inheritance
+— __var__ should not be used and be left for Python (P. uses them, it might introduce new dunders, so it theoretically might happen that if you define your own dunder, after some new language version release your code will clash with Python’s)
+
+— packages should be one-words w/o underscores
+— const should be ALL_UPPERCASE snake_case convention 
+— classes should be BankAccount
+— others should be all lowercase snake_case convention
+
+
+Ternary operator 🥰
+a = 5
+b = ‘hi’ if a > 5 else ‘bye’
+
+Functions 
+— should be defined before called
+
+	OKAY						FAILS
+def func_1():				def func_1():
+	func_2()					func_2()
+
+def func_2():				func_1()
+	pass
+						def func_2():
+func_1()						pass
+
+
+fn3 = lambda x: x**x
+
+
+Loops 🥰
+— there is no do…while in Python
+— it is simulated by:
+
+while True:
+	name = input(“Enter name: “)
+	if name.isprintable() and name.isalpha():
+		break # valid name
+
+— while loops, on the other hand, might have else-statements
+— else-statement gets executed only if the while-loop finished w/o executing break statement
+
+a = 10
+l = [1, 2, 3]
+i = 0
+
+while i < len(l):
+	if l[i] == a:
+		break
+	i += 1
+else:
+	l.append(a)
+
+
+try-except-finally
+— finally executes no matter what, even if continue-keyword is encountered before
+
+a = 0
+b = 2
+
+while a < 4:
+	print(‘————————‘)
+	a += 1
+	b -= 1
+
+	try:
+		a / b
+	except ZeroDivivsionError:
+		print(‘Divided by zero’)
+		continue
+	finally:
+		print(‘But I always run’)
+
+	print(‘Main loop’)
+
+
+Output:
+————————
+But I always run #a=1, b=1
+Main loop
+————————
+Divided by zero #a=2, b=0
+But I always run
+————————
+But I always run #a=3, b=-1
+Main loop
+————————
+But I always run #a=4, b=-2
+Main loop
+
+
+Iterable 🥰
+— any object capable of returning values 1 at a time
+
+— there is no standard for-loop in Python (even in languages where there are standard for-loops they are usually rewritten by compilers to while-loops) 
+— but there is a for-loop that allows looping over an iterable (as in JS is for-of)
+
+for x in [(1, 2), (3, 4), (5, 6)]:
+    print(x)
+
+Output: 
+(1, 2)
+(3, 4)
+(5, 6)
+
+for i, j in [(1, 2), (3, 4), (5, 6)]:
+    print(i, j)
+
+Output:
+1 2
+3 4
+5 6
+
+s = 'hello'
+for i, c in enumerate(s):
+    print(i, c)
+
+0 h
+1 e … etc.
+
+
+Classes 🥰
+
+class Rectangle:
+	# 1. a new object is created with __new__() under the hood
+	# 2. ctor __init__() initializes the object
+    def __init__(self, width, height):
+ 	# we call our accessor methods to set the width and height to Px the user from instantiating width with a negative val
+        self.width = width
+        self.height = height
+
+# Python provides a safe and comfortable way of adding getters and setters
+# defining them with a @property decorator allows users not to break their code if we introduce getter/setter later in the code (= allows for backwards compatibility)
+# everywhere inside the class where we access self.width — internally a getter is called
+# outside the class the user uses r1.width and r1.width = 90
+    @property
+    def width(self):
+        return self._width
+    
+    @width.setter
+    def width(self, width):
+        if width <= 0:
+            raise ValueError('Width must be positive.')
+        self._width = width
+    
+        
+    def area(self):
+        return self.width * self.height
+    
+    def perimeter(self):
+        return 2 * (self.width + self.height)
+    
+    # overwrites the action executed on str(obj) call
+    def __str__(self):
+        return 'Rectangle (width={0}, height={1})'.format(self.width, self.height)
+    
+    # overwrites the action on print(obj)
+    def __repr__(self):
+        return 'Rectangle({0}, {1})'.format(self.width, self.height)
+    
+    def __eq__(self, other):
+        if isinstance(other, Rectangle):
+            return (self.width, self.height) == (other.width, other.height)
+        else:
+            return False
+    
+    def __lt__(self, other):
+        if isinstance(other, Rectangle):
+            return self.area() < other.area()
+        else:
+            return NotImplemented
+
+r1 = Rectangle(100, 200)
+r2 = Rectangle(10, 20)
+
+r1 < r2 => True
+r1 > r2 will also work, even though we have not explicitly defined __gt__(), as Python will reverse the expression
+
+r1 ≤ r2, however will raise a TypeError (not supported)
+
+
+VARIABLES 🥰
+variables are references to memory addresses, in which objects are stored
+id(my_var) => memory address in 10-representation
+hex(id(my_var)) => memory address of a variable (and an object) in hexadecimal representation
+
+Reference counting
+— a technique that Python Memory Manager uses to keep track of whether an object is used by the program VS it can be garbage collected
+
+my_var = [1, 2, 3]
+
+import sys
+sys.getrefcount(my_var) => # 2
+— the fact of passing a var into a function creates a reference (we pass things by value in Python), so 1 reference is from the my_var itself + 1 from the fact we passed it to a function
+
+— another c-library function does not have this problem
+import ctypes
+
+def ref_count(address):
+    return ctypes.c_long.from_address(address).value
+
+ref_counter(id(my_var)) => # 1
+
+another_var = my_var
+ref_counter(id(my_var)) => # 2
+
+del another_var
+ref_counter(id(my_var)) => # 1
+
+my_var = None
+ref_counter(id(my_var)) => RANDOM NUMBER
+— this happens because this memory address has been retrieved by PMM for its uses and we know do not know what is stored there and how many references it has
+
+
+GARBAGE COLLECTOR 🥰
+— if counting references was the only mechanism for memory clean-up in Python, each time when circular references were created, our apps would suffer from memory leaks
+— actually, garbage collector has its own mechanisms to track used/unused variables and it can clean-up even circular references
+
+— imports
+import ctypes
+import gc
+
+— disable garbage collector to see what’s going on w/o it
+gc.disable()
+
+— create objects with circular references
+class A:
+    def __init__(self):
+        self.b = B(self)
+        print('A: self: {0}, b:{1}'.format(hex(id(self)), hex(id(self.b))))
+
+class B:
+    def __init__(self, a):
+        self.a = a
+        print('B: self: {0}, a: {1}'.format(hex(id(self)), hex(id(self.a))))
+
+my_var = A()
+
+— create a function that checks whether garbage collector tracks our objects:
+def object_by_id(object_id):
+    for obj in gc.get_objects():
+        if id(obj) == object_id:
+            return "Object exists"
+    return "Not found”
+
+def ref_count(address):
+    return ctypes.c_long.from_address(address).value
+
+— now let’s save addresses of variables & then remove external reference
+a_id = id(my_var)
+b_id = id(my_var.b)
+my_var = None
+
+— … and see what is going on
+print('refcount(a) = {0}'.format(ref_count(a_id)))
+print('refcount(b) = {0}'.format(ref_count(b_id)))
+print('a: {0}'.format(object_by_id(a_id)))
+print('b: {0}'.format(object_by_id(b_id)))
+
+Output: 
+refcount(a) = 1
+refcount(b) = 1
+a: Object exists
+b: Object exists
+
+— now lets manually perform garbage collection and re-run the prev.code
+gc.collect()
+…
+
+Output: 
+refcount(a) = 0
+refcount(b) = 0
+a: Not found
+b: Not found
+
+THE MORAL OF THE STORY: think twice if you want to disable the gc 🤣
+
+
+VARIABLE REASSIGNMENT 🥰
+— in Python if you work with immutable types, on reassignment a new memory address is allocated for the new value & variable’s reference is updated to point to the new address
+my_var = 10
+print(hex(id(my_var))) => # 12345
+
+my_var = 15
+print(hex(id(my_var))) => # 67890
+
+— immutable are:
+	all numerical types
+	strings
+	tuples
+	frozen sets
+	
+— mutable objects: objects whose internal state (what’s inside the memory cell) can be changed
+	lists
+	sets
+	dicts
+
+
+references, shared references 🥰
+— shared references to a memory address (eg, 0x1234)
+a = 10
+b = a
+
+— reassigning b
+b = 12 => memory address b points to has ∆
+
+— because numeric types in Python are immutable, the internal contents of the original memory cell (0x1234) cannot be manipulated => to ∆ b Python should create another variable (in another memory cell) and REASSIGN b to point to this new memory place
+
+— mutable types when passed to a function if modified inside => the changes are reflected on the original var
+
+
+VARIABLE EQUALITY 🥰
+is — identity operator, compares memory addresses
+== — equality operator, compares values
+
+— all “things” that exist in Python are objects (meaning somewhere in the wild wild Python they have their Papa-class)
+— functions are objects: type(my_func) => class function
+— classes are objects:
+class MyClass:
+	pass
+
+type(MyClass) => class class
+
+— the fact they all are objects mean they all have a memory address
+
+
+PYTHON OPTIMIZATIONS 🥰
+CPython — a standard (reference) Python implementation written in C
+JPython — a Python implementation written in Java; is compiled to bytecode & run in JVM
+IronPython — an implementation written in C#, targets .Net
+PyPy — an implementation written in RPython, which itself is Python implementation written in C as statically-typed
+
+Interning 
+— caching of some Python objects to allow their re-use (for memory & performance optimizations)
+— CPython caches a list of integers in the range -5 to 256 included
+— any time an integer in this range is referenced, no new object is created, the reference is pointing to the cache
+— CPython also interns some strings = strings that follow the rules of identifiers, eg. “this_is_a_very_long_2_string_that_will_notwithstanding_be_interned” 
+— other strings won’t be interned:
+	a = “hello world”
+	b = “hello world”
+	a is b => False
+— you can intern strings manually by:
+	import sys
+	a = sys.intern(“hello world”)
+	b = sys.intern(“hello world”)
+	a is b => True
+
+— why Python interns strings? 
+for the reasons of memory & speed optimizations (if a & b are 2 different strings, you will compare them by EQUALITY operator, which means comparing char-by-char, which takes a lot of time; 
+however if a & b were interned = they are references to the same place in memory => comparison can be done by IDENTITY operator, which is way faster as you only compare 2 integers = memory addresses) 
+
+— why you would want to manually intern strings?
+you know you’ll have string comparisons in the range of hundred thousands | millions of times;
+in any other situation — do NOT intern (you won’t gain performance)
+
+
+Peephole
+— expressions with constants (should be immutable!) are optimized in various ways:
+	1) numerical calculations are cached (24*60)
+	2) short sequences (<20 chars) are cached: 
+		(1, 2) * 5 => (1, 2, 1, 2, 1, 2, 1, 2, 1, 2)
+		‹abc› *3
+		‹hello› + ‹world›
+	
+	3) mutable => immutable in membership tests:
+		if e in [1, 2, 3] => from the point of view of Python, [1,2,3] is a const, so it => it to a tuple | sets are => frozen sets
+
+— example
+def my_func():
+    a = 24 * 60
+    b = (1, 2) * 5
+    c = 'abc' * 3
+    d = 'ab' * 11
+    e = 'the quick brown fox' * 10
+    f = [1, 2] * 5
+
+my_func.__code__.co_consts
+— along with 1, 2, 3, 5, 11 and others, you’ll find that 24*60 was calculated and cached as 1440, (1, 2) * 5 was calculated and cached as (1, 2, 1, 2, 1, 2, 1, 2, 1, 2) and 'abc' * 3 was cached as ‹abcabcabc'
+— 'ab' * 11 and 'the quick brown fox' * 10 are not cached for exceeding 20 chars length
+— f is not cached as list is mutable and not a constant
+
+
+Membership tests
+— set membership is way faster that list/tuple membership
+— as sets implementation is the same as dicts in Python
+
+import string
+import time 
+
+char_list = list(string.ascii_letters)
+char_tuple = tuple(string.ascii_letters)
+char_set = set(string.ascii_letters)
+		
+def membership_test(n, container):
+    for i in range(n):
+        if 'p' in container:
+            pass
+
+start = time.perf_counter()
+membership_test(10000000, char_list)
+end = time.perf_counter()
+print('list membership: ', end-start)
+
+— Output: 5.0s
+— almost the same with tuples
+— however with sets the output will be ~0.5s	
+
+
+ALL ABOUR FUNCTIONS 🥰
+— to add documentation to a function, as a 1st line inside func body add a string called DOCSTRING (usually it’s good practice to add “”” “”” VS ’’’ ’’’)
+— this is a regular string, under the hood it is added to the func.__doc__ property
+— it does not affect how the code is run, but can be used by 3rd party libs that based on such “documentation” create a real styled documentation for your code
+
+— help(any_python_object) gives info about the object, if you add a docstring, it will also appear there
+
+— you can also add annotations (what types are params and return value), this does not affect the runtime of course as P. is dynamically typed
+— default values should be specified AFTER the annotations on params
+
+def my_func(a:str='a', b:int=1)->str:
+    return a*b
+
+
+
+
+Mucho mucho Python 
+print(‘*’ * 10) => **********
+
+name = input(“Enter your name:”)
+
+Type conversion funcs:
+— int()
+— bool()
+— float()
+
+msg = ‘Message’
+msg[-1] => ‘e’
+msg[0:3] => ‘Mes’
+0 — included
+3 — excluded
+
+msg[1:] => ‘essage’
+another = msg[:] => copies the string
+msg[0:-1] => ‘Messag’
+
+msg = f”{first_name} {last_name}”
+len(msg)
+msg.upper()
+msg.find(‘a’) => returns index 
+
+in - operator (is smth present in smth)
+
+10/3 => floating-point # 3.3333… (true division operator)
+10 // 3  =>  3 (floor division)
+
+import math
+math.ceil(2.8) => 3
+math.floor(2.8) => 2
+math.abs(-2.8) => 2.8
+
+
+Compiled VS Interpreted languages
+— compilers & interpreters convert a human-readable code => CPU-readable machine code 
+
+Compilers:
+— conversion directly into machine code at once => faster execution + control over hardware (CPU usage, memory)
+— requires a build step (all the code is translated at once)
+— rebuild required after every ∆
+— resulting binary is platform-dependent
+
+Interpreters:
+— src code is run line-by-line & executed as it goes (live translation)
+— Python can be executed as compiled VS as interpreted language
+— execution is slower, but more flexible
+— interpreters do not produce a binary executable
+
+— few languages are exclusively compiled VS interpreted
+— all depends on the language implementation
+— there are interpreters for C, Python can be 1st compiled into bytecode => bytecode is interpreted
+
+
+Dynamic VS Static typing
+— typing = when data types are checked
+— dynamic typing = on the fly (on execution)
+— static typing = before runtime
+
+— Python is dynamically typed
+def foo(a):
+	if a > 0:
+		print(“Hi”)
+	else:
+		print(3 + “5”) # invalid in Python, represents type coercion
+
+foo(2) => won’t cause the problem & no error thrown (as the execution never enters the else-statement)
+
+— in static typing all data types should be known before execution, the code won’t be executed until all the errors are corrected
+— errors are caught early = safer program
+— memory optimizations possible (when CPU knows beforehand, which datatypes are used — it allocates memory in a more efficient way) => better performance on execution
+— on the other hand, it is less flexible & vars cannot be redeclared to another data type
+
+— the mechanism that allow dynamic typing is called RTTI(runtime type info)
+— dynamic dispatch — another mechanism that allows to choose at runtime a specific implementation of an operation (2 * 3 VS ‘a’ * 3)
+
+
+REPL
+— read => evaluate => print => loop 
+— an environment that allows to read the input => perform evaluation => return the output to the user => starts waiting for another input
+— bash shells, python shell, node shell
+
+Console
+— a physical terminal, directly connected to the machine
+— is recognized by the OS as a terminal
+— a device that allows IO ops
+
+Terminal
+— text input/output environment
+— terminal window emulates a console in GUI
+
+Shell 
+— CLI (command-line interpreter)
+— a program that processes commands & outputs the results
+
+
+for item in range(10):
+	print(item)
+— creates a range form 0 (included) to 10 (not included)
+— range(5, 10) => 5, 6, 7, 8, 9
+— range(FROM, TO, STEP)
+
+
+Important terms in Python
+— “cake” + 2 		=> INVALID (TypeError: incompatible types)
+— “cake” * 2 		=> valid
+— “cake” + “cake” 	=> valid
+
+— NoneType: a data type that represents nothing, analog of null
+names = [“Viki”, “Lior”, “Keren”]
+names.sort() 	=> performs sorting in-place & return NoneType 
+(trying to do names = names.sort() & then manipulate names will result in type error)
+— a class that has a single object = None
+
+— del: deletes an object (in Python everything is an object)
+var = a
+del a
+print(a) => NameError
+
+— in: checks presence of smth in a sequence
+
+— try — except — finally 
+try:
+	# smth
+except NameError:
+	# handle NameError
+except TypeError:
+	# handle TypeError
+else:
+	# no error occurred
+finally:
+	# close & clean-up code
+
+— as: creates aliases
+import calendar as cal
+cal.month_name
+
+— import module
+— from module import object 
+
+— arrange imports like this:
+	standard libs
+	external libs
+	custom user libs
+
+— assert: tests whether a condition returns True, else raises an AssertionError
+x = “hello”
+assert x == “hello” => nothing happens
+assert x == “world” => AssertionError
+assert x == “world”, “x should be ‘hello’” => AssertionError: “x should be ‘hello’”
+
+
+— global: to refer to / create global vars from a non-global scope
+def my_func():
+	global x
+	x = “hello”
+
+my_func()
+print(x) 	=> will print “hello” (x will be accessible in the global scope)
+
+
+— nonlocal: used when there are nested funcs to indicate that we refer to a var from the outer function
+
+def func():
+	x = ‘John’
+	def func_inner():
+		nonlocal x
+		x = ‘Sarah’
+	func_inner()
+	return x
+
+print(func()) 	=> ‘Sarah’
+
+def func():
+	x = ‘John’
+	def func_inner():
+		x = ‘Sarah’
+	func_inner()
+	return x
+
+print(func()) 	=> ‘John’
+
+
+are there arrays in Python?
+— yes, but should be imported (import array as a)
+— work with homogenous data types only
+— my_arr = a.array(TYPECODE, [values])
+
+TYPECODEs: 
+“I” => unsigned integer
+“i” => signed integer
+“B” => unsigned char
+“f” => float
+“d” => double
+
+— lists:
+	built-in
+	mutable
+	ordered sequence
+	store collections of heterogenous data
+
+	.append(#)
+	.insert(IDX, #)
+	.remove(#)
+	.clear()
+	.pop()
+	.index(#) 
+	.count(#)
+
+
+— dictionaries:
+	customer = {
+	  “name”: “Lior”,
+	  “age”: 30,
+	}
+
+	duplicate keys not allowed
+	customer[“is_verified”] => KeyError
+	customer.get(“is_verified”) => None
+	
+	.get(KEY, optDEFAULT_VAL)— returned if key-value pair doesn’t exist
+
+	.keys() | .values() | .items() # k-v pairs as tuple
+
+
+— graphs can be implemented with dicts
+graph = {
+	“a”: [“c”, “d”],
+	“b”: [“d”, “e”],
+	“c”: [“a”, “e”],
+	“d”: [“a”, “b”],
+	“e”: [“b”, “c”],
+}
+
+def define_edges(graph):
+	edges = []
+	for vertex in graph:
+		for neighbor in vertex:
+			edges.append(vertex, neighbor)
+	return edges
+
+
+— ! methods have to be defined in the body of the class, but attributes can be set elsewhere !
+
+
+— tuples simultaneous comparison:
+	(0, 1, 2) < (5, 1, 2) 	=> True
+
+
+— Inheritance
+class Mammal:
+	pass
+
+    subclass
+class Dog(Mammal):
+	      superclass
+	pass
+
+
+— modules: files with Python code 
+import module 					=> module.func_name()
+from module import func_name 		=> func_name()
+
+— packages: containers for related modules, contains __init__.py file
+import package.module				=> package.module.func_name()
+from package import module 			=> module.func_name()
+from package.module import func_name  	=> func_name()
+
+
+from pathlib import Path
+path = Path() # w/o args returns the path to the cur dir VS pass ‘dirname’
+path.mkdir(“new_dir”)
+path.rmdir(“new_dir”)
+
+
+— files:
+h = open(FILENAME, MODE)
+h.read() | h.write() 
+
+# find 10 mot common words in a dictionary file
+try:
+	f = open(“my.txt”)
+except IOError:
+	print(“File not found”)
+else:
+	counts = dict()
+
+	for line in f:
+		words = line.split()
+		for word in words:
+			counts[word] = counts.get(word, 0) + 1
+
+	return sorted([(val, key) for key, val in counts.items()])[:10]
+
+
+— django: a framework for developing web apps in Python
+pip3 install django
+
+— django-admin startproject PROJNAME .
+(a new folder is created with __init__.py, settings.py, urls.py, wsgi.py;
+outside this folder — manage.py)
+
+
+Python Interview Questions
+
+WHAT IS PYTHON
+— a high-level, interpreted programming language, dynamically typed
+— supports multiple programming paradigms, including procedural, object-oriented, and functional programming styles
+— has automatic memory management 
+
+
+Programming styles
+— paradigms for structuring & organizing code
+
+Procedural programming: 
+— a programming paradigm that focuses on writing procedures or routines that perform operations on data 
+— uses procedures | subroutines to break down tasks into smaller, manageable pieces
+— top-down approach 
+— has IMPERATIVE style of programming (a list of step-by-step instructions to accomplish a task)
+— procedures manipulate variables (state), they can modify the state directly
+— characteristics:
+	modular (code organized into procedures for reusability)
+	sequential execution 
+— benefits:
+	efficiency (instructions can closely map machine instructions)
+	clear control flow 
+— pitfalls:
+	mutable state (a source of bugs & difficulty in parallelism)
+	limited abstraction 
+	code duplication risk increased 
+	
+
+Functional programming:
+— a programming paradigm that focuses on evaluation of mathematical functions
+— passing data from function to function to function to get a result
+— functions are treated as data 
+— functions should be pure (no side effects, no shared state manipulation), avoiding mutable data
+— has DECLARATIVE style of programming, the emphasis on what should be there result of computation rather than how to compute smth step-by-step
+— characteristics:
+	functions are 1st-class citizens
+	pure functions (no side effects, no global data manipulation, same input = same output no matter what)
+	use of immutable data 
+	emphasis on data transformation 
+— benefits:
+	predictability (no side effects)
+	modularity 
+— pitfalls: 
+	performance issues (function invocation overhead)
+	
+
+WHAT IS PEP8
+— an official style guide for Python code (guidelines how to write the code in a standard way => increase its readability)
+
+== VS is:
+== checks value equality
+is checks identity equality (whether 2 references point to the same object in memory)
+
+sequence = ordered collection (tuple, list)
+unordered collections (set, dict)
+
+
+WHAT IS LIST COMPREHENSION
+— a technique to create a list from another iterable via special syntax
+— lists are generated by iterating over an existing iterable (such as a list, tuple, or string) and applying an expression to each element of the iterable
+
+new_list = [expression for item in iterable if condition]
+
+
+ITERABLE vs ITERATOR
+— iterable is an object capable of returning its members one at a time
+— iterator is an object used to iterate over an iterable, keeping track of the current state of iteration
+
+
+LAMBDA FUNCTION
+— Lambda functions, also known as anonymous functions, are small, inline functions defined using the lambda keyword
+
+
+DEEP vs SHALLOW COPY
+— deep copy creates a new object and recursively copies the contents of nested objects
+— shallow copy creates a new object but only copies the references to the original nested objects
+
+
+GENERATORS
+— functions that return an iterator, which allows to iterate over a sequence of values lazily rather than generating them all at once
